@@ -47,10 +47,8 @@
 // `;
 // module.exports = typeDefs;
 
-
-
-
 const { gql } = require("apollo-server");
+
 const typeDefs = gql`
   type coordinates {
     lon: Float
@@ -66,19 +64,18 @@ const typeDefs = gql`
     temp: Float
     feelslike: Float
   }
+
   type weatherResponse {
     id: String
-    cityname: String
+    name: String
     base: String
     coord: coordinates
     main: weatherTemp
     weather: [weather]
   }
 
-  type Query{
-  weatherByCity(cityname:String!):weatherResponse!
-  
-
+  type Query {
+    weatherByCity(cityname: String!): weatherResponse!
   }
 `;
-module.exports = typeDefs
+module.exports = typeDefs;

@@ -63,10 +63,6 @@
 //   ));
 // }
 
-
-
-
-
 // import {
 //   Box,
 //   Button,
@@ -118,18 +114,11 @@
 
 // export default DemoCall;
 
-
-
-
-
-
-
-
-
 import React from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Flex,
   HStack,
@@ -139,47 +128,41 @@ import {
 import { useState } from "react";
 import { getweatherdata } from "./Constants";
 import { GraphQLClient, gql } from "graphql-request";
-import {Image}   from "@chakra-ui/react";
+import { Image } from "@chakra-ui/react";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
-const index = () => {
-  const [cityName, setCityName] = useState('');
-  const [value, setValue] = useState("");
-  const [temp, setTemp] = useState("");
-  const [id, setId] = useState();
-  const [coord, setCoord] = useState("");
+const Index = () => {
+  const [cityName, setCityName] = useState("");
 
-  const weatherFun = async () => {
-    const endpoint = "http://localhost:4000/graphql";
+  const [getWeather, { data, loading }] = useLazyQuery(getweatherdata);
 
-    const graphQLClient = new GraphQLClient(endpoint);
+  const weatherFun = (cityName: string) => [
+    getWeather({ variables: { cityname: cityName } }),
+  ];
 
-    const data = await graphQLClient.request(getweatherdata, {
-      cityname: cityName,
-    });
+  // const weatherFun = async () => {
+  //   const endpoint = "http://localhost:4000/graphql";
 
-    console.log(data);
+  //   const graphQLClient = new GraphQLClient(endpoint);
 
-    const cityname = data.weatherByCity.cityname;
-    const temp = data.weatherByCity.main.temp;
-    const coord = data.weatherByCity.coord.lat;
-    const id = data.weatherByCity.id;
-     
-    // const {cityname}=data.weatherByCity
-    // console.log(cityname)
-    
+  //   const data = await graphQLClient.request(getweatherdata, {
+  //     cityname: cityName,
+  //   });
 
-    // console.log(cityname);
+  //   console.log(data);
 
-    // console.log(temp);
-    // console.log(id);
-    // console.log(coord);
-    // const details=[cityName,temp,coord,id]
+  //   const cityname = data.weatherByCity.cityname;
+  //   const temp = data.weatherByCity.main.temp;
+  //   const coord = data.weatherByCity.coord.lat;
+  //   const id = data.weatherByCity.id;
 
-    setValue(cityname);
-    setTemp(temp);
-    setCoord(coord);
-    setId(id);
-  };
+  //   setWeatherData({
+  //     cityName,
+  //     temp,
+  //     coord,
+  //     id,
+  //   });
+  // };
   return (
     <>
       <Container
@@ -193,18 +176,20 @@ const index = () => {
       >
         <Flex>
           <Input onChange={(e) => setCityName(e.target.value)} />
-          <Button onClick={weatherFun}>search</Button>
+          <Button onClick={() => weatherFun(cityName)}>
+            {loading ? <CircularProgress size="8" isIndeterminate /> : "Search"}
+          </Button>
         </Flex>
-        <Image src="../ios-weather.jpg" width='600px'mt='20px'alt='pic'/>
-        <Flex mt='20px'>
-          <Box>Cityname - {value},</Box>
-          <Box ml='10px'>Temp - {temp},</Box>
-          <Box ml='10px'>Id - {id},</Box>
-          <Box ml='10px'>Coord - {coord}</Box>
+        <Image src="../ios-weather.jpg" width="600px" mt="20px" alt="pic" />
+        <Flex mt="20px">
+          <Box>Cityname - {data?.weatherByCity?.name},</Box>
+          <Box ml="10px">Temp - {data?.weatherByCity?.main?.temp},</Box>
+          <Box ml="10px">Id - {data?.weatherByCity?.id},</Box>
+          <Box ml="10px">Coord - {data?.weatherByCity?.coord?.lat}</Box>
         </Flex>
       </Container>
     </>
   );
 };
 
-export default index;
+export default Index;

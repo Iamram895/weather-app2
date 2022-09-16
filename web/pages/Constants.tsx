@@ -23,33 +23,27 @@
 
 // export { getbiodataQuery, addbiodataMutation };
 
+import { gql } from "graphql-tag";
 
-import {gql} from "graphql-request";
-
-
-
-const getweatherdata=gql`
-
-query ($cityname: String!) {
-  weatherByCity(cityname: $cityname) {
-    cityname,
-    id
-    main {
-      temp
-      feelslike
-      
-    }
-    coord {
-      lon
-      lat
-    }
-    base
-    weather {
+const getweatherdata = gql`
+  query ($cityname: String!) {
+    weatherByCity(cityname: $cityname) {
+      name
       id
-      main
+      main {
+        temp
+        feelslike
+      }
+      coord {
+        lon
+        lat
+      }
+      base
+      weather {
+        id
+        main
+      }
     }
   }
-}
-
 `;
-export {getweatherdata}
+export { getweatherdata };

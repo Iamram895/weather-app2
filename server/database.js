@@ -21,13 +21,27 @@
 // }
 
 //module.exports = DataAPI;
-// const { RESTDataSource, RequestOptions } = require("apollo-datasource-rest");
+const { RESTDataSource, RequestOptions } = require("apollo-datasource-rest");
 
-// class WeatherAPI extends RESTDataSource {
-//   constructor() {
-//     super();
-//     this.baseURL = `https://api.openweathermap.org/data/2.5/weather?q=jaipur&units=metric&appid=f4286bd141d4da8509b512b46e714966`;
-//   }
+class WeatherAPI extends RESTDataSource {
+  constructor() {
+    super();
+    this.baseURL = `https://api.openweathermap.org/data/2.5/weather`;
+  }
+
+  async withCityName(cityName) {
+    try {
+      const data = await this.get(
+        `?q=${cityName}&units=metric&appid=f4286bd141d4da8509b512b46e714966`
+      );
+
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
 
 //   async withcityname() {
 //     const data = await this.get();
@@ -37,16 +51,7 @@
 //   }
 // }
 
-// module.exports = WeatherAPI;
-
-
-
-
-
-
-
-
-
+module.exports = WeatherAPI;
 
 // import axios from 'axios';
 
